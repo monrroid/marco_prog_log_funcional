@@ -1,0 +1,28 @@
+-- Función para aplicar un descuento a un precio
+aplicarDescuento :: Float -> Float -> Float
+aplicarDescuento precio descuento = precio * (1 - descuento)
+
+-- Función para aplicar el IVA a un precio
+aplicarIVA :: Float -> Float -> Float
+aplicarIVA precio iva = precio * (1 + iva)
+
+-- Función que recibe una lista de precios y porcentajes de una cesta de la compra,
+-- y una función para aplicar los descuentos o el IVA a los productos de la cesta
+-- y devuelve el precio final de la cesta.
+precioFinalCesta :: [(Float, Float)] -> (Float -> Float -> Float) -> Float
+precioFinalCesta productos funcion = sum [funcion precio porcentaje | (precio, porcentaje) <- productos]
+
+-- Ejemplo de uso
+productos :: [(Float, Float)]
+productos = [(100, 0.1), (50, 0.05), (200, 0.15)] -- Lista de precios y porcentajes de descuento
+
+precioFinalConDescuento :: Float
+precioFinalConDescuento = precioFinalCesta productos (\precio descuento -> aplicarDescuento precio descuento)
+
+precioFinalConIVA :: Float
+precioFinalConIVA = precioFinalCesta productos (\precio iva -> aplicarIVA precio iva)
+
+main :: IO ()
+main = do
+    putStrLn $ "Precio final con descuento: " ++ show precioFinalConDescuento
+    putStrLn $ "Precio final con IVA: " ++ show precioFinalConIVA
